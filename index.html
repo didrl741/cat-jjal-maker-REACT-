@@ -51,6 +51,14 @@
     };
 
 
+    const fetchCat = async (text) => {
+      const OPEN_API_DOMAIN = "https://cataas.com";
+      const response = await fetch(`${OPEN_API_DOMAIN}/cat/says/${text}?json=true`);
+      const responseJson = await response.json();
+      return `${OPEN_API_DOMAIN}/${responseJson.url}`;
+    };
+
+
     function CatItem(props) {
       return (
         <li>
@@ -106,7 +114,7 @@
           setErrorMessage('빈 값으로 생성 불가!');
           return;
         }
-        updateMainCat();
+        updateMainCat(value);
       }
 
       return (
@@ -160,16 +168,28 @@
       const [mainCat, setMainCat] = React.useState(CAT1);
 
       const [favorites, setFavorites] = React.useState(
-        // 문법 : 앞에거가 없으면 뒤에거를 써라.
-        // 처음에는 null이 저장되는데 위에서 map을 null에는 쓸 수 없기 때문에 이렇게 해줘야 함.
+
         jsonLocalStorage.getItem("favorites") || []
       );
 
-      function updateMainCat() {
-        setMainCat(CAT2);
+
+      async function setInitCat() {
+        const newCat = await fetchCat("First Cat");
+        setMainCat(newCat);
+      }
+
+      React.useEffect(() => {
+        setInitCat();
+      }, []);
+
+
+      async function updateMainCat(value) {
+
+        const newCat = await fetchCat(value);
+
+        setMainCat(newCat);
         setCounter(counter + 1);
 
-        // 새로고침 해도 로컬에 남아있다!
         jsonLocalStorage.setItem("counter", counter + 1);
       };
 
