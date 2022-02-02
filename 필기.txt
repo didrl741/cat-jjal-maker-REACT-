@@ -1,0 +1,18 @@
+live server 다운로드: html을 저장하면 자동으로 웹 페이지가 업데이트 된다.
+
+settings -> format on save 체크: 코드가 엉망이여도 저장누르면 자동으로 틀을 잡아준다.
+
+React: 사용자 인터페이스를 만들기 위한 JavaScript 라이브러리!
+
+babel: body태그의 끝에 script로 작성한 react 문법을, 웹 브라우저가 이해할수 있는
+	JS문법으로 head의 script에 번역해준다.
+
+
+React 안에 JS 문법 쓰기: {}안에 JS로 작성하면 된다.
+    const hello = "hello world";
+    const favorites = (
+      <ul class="favorites">
+        {hello}{1 + 2}{(hello === "hello world") ? 'true' : 'false'}
+        {catItem}{catItem}{catItem}
+      </ul>
+    );

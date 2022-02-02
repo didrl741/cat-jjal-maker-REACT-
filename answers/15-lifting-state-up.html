@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>고양이 가라사대</title>
+</head>
+<style>
+  body {
+    text-align: center;
+  }
+
+  .main-card button {
+    position: relative;
+    left: -45px;
+    bottom: 15px;
+  }
+
+  .favorites {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  /* .favorites img {
+    width: 150px; 
+  }*/
+</style>
+
+<body>
+  <div id="app"></div>
+
+  <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+  <script type="text/babel">
+    console.log("야옹");
+
+
+
+    function CatItem(props) {
+      return (
+        <li>
+          <img src={props.img} style={{ width: "150px", border: "1px solid red" }} />
+        </li>
+      );
+    }
+
+
+    function Favorites() {
+      return (
+        <ul className="favorites">
+          <CatItem img="https://cataas.com//cat/5e9970351b7a400011744233/says/inflearn" />
+          <CatItem img="https://cataas.com/cat/595f280b557291a9750ebf65/says/JavaScript" />
+          <CatItem />
+        </ul>
+      );
+    }
+
+
+    const H1Tag = (props) => {
+      console.log(props);
+      return <h1>{props.children}</h1>;
+    }
+
+
+
+    const FormTag = ({ handleFormSubmit }) => {
+
+      return (
+        <form onSubmit={handleFormSubmit} >
+          <input type="text" name="name" placeholder="영어 대사를 입력해주세요" />
+          <button type="submit">생성</button>
+        </form>
+      )
+    }
+
+    // const [counter, setCounter] = React.useState(1);    이라고 해도 됨.
+
+
+    const MainCard = ({ img }) => {
+
+      return (
+        <div className="main-card">
+          <img src={img} alt="고양이" width="400" />
+          <button>🤍</button>
+        </div>
+      );
+    };
+
+
+
+    function Card(title, description) {
+      return (
+        <div>
+          <h2>{title}</h2>
+          {description}
+        </div>
+      );
+    }
+    <Card title="리액트~" description="리액트입니다" />
+
+
+    // counter상태를 쓰고싶은 공간이 HiTag와 FormTag 두 공간인데 State는 form에 선언해놔서 
+    // h1tag에서는 못 쓴다. 따라서, App이라는 '부모'에 선언을 해서 자식에 props로 넘겨서
+    // 자식 에게서 쓸수 있게 하자. 
+    // 이 때, 현재 app은 엘리먼트이기 때문에 State를 못 쓴다. -> 컴포넌트로 바꾸자!
+    const App = () => {
+
+      const counterState = React.useState(1);
+      const counter = counterState[0];
+      const setCounter = counterState[1];
+      console.log("카운터 ", counter);
+
+
+      function handleFormSubmit(event) {
+        event.preventDefault();
+        console.log("폼 전송됨");
+        setCounter(counter + 1);
+      }
+
+      return (
+        <div>
+          <H1Tag>{counter}번째 jjal</H1Tag>
+          <FormTag handleFormSubmit={handleFormSubmit} />
+          <MainCard img="https://cataas.com/cat/60b73094e04e18001194a309/says/react" />
+          <Favorites />
+        </div>
+      )
+    }
+
+
+    const renderHere = document.querySelector('#app');
+
+    ReactDOM.render(<App />, renderHere);   // 컴포넌트는 이렇게 전달!
+
+  </script>
+</body>
+
+</html>

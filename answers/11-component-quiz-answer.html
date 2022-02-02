@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>고양이 가라사대</title>
+</head>
+<style>
+  body {
+    text-align: center;
+  }
+
+  .main-card button {
+    position: relative;
+    left: -45px;
+    bottom: 15px;
+  }
+
+  .favorites {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .favorites img {
+    width: 150px;
+  }
+</style>
+
+<body>
+  <div id="app"></div>
+
+  <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+  <script type="text/babel">
+    console.log("야옹");
+
+
+    // 어떤 인자든 한번에 다 받는 props를 인자로 받아서 props의 img를 속성으로 가지는 img태그를 리턴하는
+    // 컴포넌트. 인자로 뭘 주는지에 따라 재사용이 가능하다.
+    function CatItem(props) {
+      return (
+        <li>
+          <img src={props.img} />
+        </li>
+      );
+    }
+
+
+    function Favorites() {
+      return (
+        <ul class="favorites">
+          <CatItem img="https://cataas.com//cat/5e9970351b7a400011744233/says/inflearn" />
+          <CatItem img="https://cataas.com/cat/595f280b557291a9750ebf65/says/JavaScript" />
+          <CatItem />
+        </ul>
+      );
+    }
+
+
+    const h1Tag = (
+      <h1>1번째 cat-jjal-maker</h1>
+    );
+
+    // 태그 안에적은것은 props의 children이름으로 전달됨.
+    const H1Tag = (props) => {
+      console.log(props);
+      return <h1>{props.children}</h1>;
+    }
+
+
+
+    const FormTag = () => (
+      <form>
+        <input type="text" name="name" placeholder="영어 대사를 입력해주세요" />
+        <button type="submit">생성</button>
+      </form>
+    );
+
+
+    function MainCard() {
+      return (
+        <div class="main-card">
+          <img src="https://cataas.com/cat/60b73094e04e18001194a309/says/react" alt="고양이" width="400" />
+          <button>🤍</button>
+        </div>
+      );
+    }
+
+    const MainCard2 = (props) => {
+      return (
+        <div class="main-card">
+          <img src={props.img} alt="고양이" width="400" />
+          <button>🤍</button>
+        </div>
+      );
+    };
+
+    // props 안쓰고 {img} 써도 된다.
+    const MainCard3 = ({ img }) => {
+      return (
+        <div class="main-card">
+          <img src={img} alt="고양이" width="400" />
+          <button>🤍</button>
+        </div>
+      );
+    };
+
+
+
+    function Card(title, description) {
+      return (
+        <div>
+          <h2>{title}</h2>
+          {description}
+        </div>
+      );
+    }
+    <Card title="리액트~" description="리액트입니다" />
+
+
+    const app = (
+      <div>
+        <H1Tag>1번째 jjal</H1Tag>
+        <FormTag />
+        <MainCard2 img="https://cataas.com/cat/60b73094e04e18001194a309/says/react" />
+        <Favorites />
+      </div>
+    );
+
+    const renderHere = document.querySelector('#app');
+
+    ReactDOM.render(app, renderHere);
+
+  </script>
+</body>
+
+</html>
