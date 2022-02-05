@@ -70,6 +70,10 @@
 
     function Favorites({ favorites }) {
 
+      if (favorites.length === 0) {
+        return <div>하트를 눌러 사진을 저장해보세요!</div>;
+      }
+
       return (
         <ul className="favorites">
           {favorites.map((cat) => (
@@ -78,8 +82,6 @@
         </ul>
       );
     }
-
-
 
     const H1Tag = (props) => {
       console.log(props);
@@ -130,12 +132,13 @@
     }
 
 
-    const MainCard = ({ img, onHeartClick }) => {
+    const MainCard = ({ img, onHeartClick, alreadyFavorite }) => {
+      const heartIcon = alreadyFavorite ? "💖" : "🤍";
 
       return (
         <div className="main-card">
           <img src={img} alt="고양이" width="400" />
-          <button onClick={onHeartClick} >🤍</button>
+          <button onClick={onHeartClick} >{heartIcon}</button>
         </div>
       );
     };
@@ -159,9 +162,16 @@
       const CAT2 = "https://cataas.com//cat/5e9970351b7a400011744233/says/inflearn";
       const CAT3 = "https://cataas.com/cat/595f280b557291a9750ebf65/says/JavaScript";
 
-      const counterState = React.useState(
-        jsonLocalStorage.getItem('counter') || 1
-      );
+      // const counterState = React.useState(
+      //   jsonLocalStorage.getItem('counter') || 1
+      // );
+
+      // 새로고침 하기 전의 카운터 값을 가져오기 위해 로컬 스토리지에 접근하는것은 처음 한번만 해주면 된다.
+      // 해결책 : 함수로 감싸주기.
+      const counterState = React.useState(() => {
+        return jsonLocalStorage.getItem('counter') || 1
+      });
+
       const counter = counterState[0];
       const setCounter = counterState[1];
 
@@ -173,26 +183,51 @@
       );
 
 
+      const alreadyFavorite = favorites.includes(mainCat);
+
       async function setInitCat() {
         const newCat = await fetchCat("First Cat");
         setMainCat(newCat);
       }
 
+
       React.useEffect(() => {
         setInitCat();
       }, []);
 
+      React.useEffect(() => {
+        console.log("counter가 바뀔때마다 실행");
+      }, [counter]);
+
+
+      // async function updateMainCat(value) {
+
+      //   const newCat = await fetchCat(value);
+
+      //   setMainCat(newCat);
+      //   setCounter(counter + 1);
+
+      //   jsonLocalStorage.setItem("counter", counter + 1);
+      // };
+
+      // 생성버튼을 연타하면 counter값이 별로 안올라가는 문제가 있었다.
+      // 이렇게 해주면 클릭 수마다 counter값 잘 올라감.
+      // setState와 usState의 인자를 값 대신 함수를 넘겨서 해결.
 
       async function updateMainCat(value) {
 
         const newCat = await fetchCat(value);
 
         setMainCat(newCat);
-        setCounter(counter + 1);
 
-        jsonLocalStorage.setItem("counter", counter + 1);
+        setCounter((prev) => {
+          const nextCounter = prev + 1;
+          jsonLocalStorage.setItem("counter", nextCounter);
+          return nextCounter;
+        });
+
+
       };
-
 
 
       function handleHeartClick() {
@@ -205,7 +240,7 @@
         <div>
           <H1Tag>{counter}번째 jjal</H1Tag>
           <FormTag updateMainCat={updateMainCat} />
-          <MainCard img={mainCat} onHeartClick={handleHeartClick} />
+          <MainCard img={mainCat} onHeartClick={handleHeartClick} alreadyFavorite={alreadyFavorite} />
           <Favorites favorites={favorites} />
         </div>
       );
@@ -215,27 +250,6 @@
 
     ReactDOM.render(<App />, renderHere);
 
-
-    // 1. 좋아요 버튼 찾기
-    const likeButton = document.querySelector(".main-card button");
-    // 2. 좋아요 버튼 눌렀을 때 이벤트
-    likeButton.addEventListener("click", function () {
-      // 3. 하트 색 바꾸기
-      likeButton.innerHTML = "❤️";
-
-      // 4. 고양이 사진을 추가할 곳 찾기
-      const favorites = document.querySelector(".favorites");
-      // 5. 새로운 고양이 사진 만들기
-      const newFavoriteImage = document.createElement("img");
-      newFavoriteImage.src =
-        "https://cataas.com/cat/60b73094e04e18001194a309/says/react";
-      // 6. 고양이 사진을 감싸는 li태그 만들기
-      const li = document.createElement("li");
-      // 7. li태그에 고양이 사진 넣기
-      li.appendChild(newFavoriteImage);
-      // 8. 방금 만든 요소 넣기
-      // favorites.appendChild(li);
-    });
   </script>
 </body>
 
